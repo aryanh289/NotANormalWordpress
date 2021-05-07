@@ -1,0 +1,79 @@
+- hosts: localhost
+  gather_facts: false
+  vars_files:
+     - vars.yml
+
+  tasks:
+  - name: "Installing Python3"
+    package:
+       name: python3
+       state: present
+
+  - name: "Installing boto3 python library"
+    pip:
+       name: boto     
+       state: present 
+  
+  - name: "Launching Master Node"
+    ec2_instance:
+       region: "{{ re }}"
+       name: "master"
+       instance_type: "{{ it }}"
+       wait: yes 
+       wait_timeout: 40
+       key_name: "{{ kn }}"
+       image_id: "{{ iid }}"
+       security_group: "{{ sg }}"
+       state: present
+       aws_access_key: "{{ access }}"
+       aws_secret_key: "{{ secret }}"
+       vpc_subnet_id: "{{ vpc }}"
+    register: master
+
+  - name: "Launching Slave 1 Node"
+    ec2_instance:
+       region: "ap-south-1"
+       name: "slave1"
+       instance_type: "{{ it }}"
+       wait: yes
+       wait_timeout: 40
+       key_name: "{{ kn }}"
+       image_id: "{{ iid }}"
+       security_group: "{{ sg }}" 
+       tags:
+          group: slave
+       state: present
+       aws_access_key: "{{ access }}"
+       aws_secret_key: "{{ secret }}"
+       vpc_subnet_id: "{{ vpc }}"
+    register: slave1
+
+  - name: "Launching Slave 2 Node"
+    ec2_instance:
+       region: "{{ re }}"
+       name: "slave2"
+       tags:
+          group: slave
+       instance_type: "{{ it }}"
+       wait: yes
+       wait_timeout: 40
+       key_name: "{{ kn }}"
+       image_id: "{{ iid }}"
+       security_group: "{{ sg }}"
+       state: present  
+       aws_access_key: "{{ access }}"
+       aws_secret_key: "{{ secret }}"
+       vpc_subnet_id: "{{ vpc }}"
+    register: slave2
+    
+  - name: Updating inventory 
+    blockinfile:
+       path: /etc/ansible/roles/hosts
+       marker: "# 1st {mark} ANSIBLE MANAGED BLOCK "
+       block: |
+               [{{ master.instances[0].tags.Name }}]
+               {{ master.instances[0].public_ip_address }}
+               [{{ slave1.instances[0].tags.group }}]
+               {{ slave1.instances[0].public_ip_address }}
+               {{ slave2.instances[0].public_ip_address }}
+

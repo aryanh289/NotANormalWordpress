@@ -1,0 +1,3 @@
+---
+# vars file for mastercon
+cidr: "17.100.0.0/16"

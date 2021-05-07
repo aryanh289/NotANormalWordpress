@@ -1,0 +1,62 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontapplication
+  labels:
+    app: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+        - name: 'wpapp'
+          image: 'wordpress'
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapplication
+  labels:
+    app: web1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web1
+  template:
+    metadata:
+      labels:
+        app: web1
+    spec:
+      containers:
+        - name: 'mysql'
+          image: 'mysql:latest'
+          env:
+          - name: MYSQL_ROOT_PASSWORD
+            value: toor
+          - name: MYSQL_DATABASE
+            value: mywpdb
+          - name: MYSQL_USER
+            value: harshu
+          - name: MYSQL_PASSWORD
+            value: harshu 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webloader
+spec:
+  selector:
+    app: web
+  type: NodePort
+  ports:
+    - targetPort: 80
+      port: 8080
+      nodePort: 30400  
