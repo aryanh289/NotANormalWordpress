@@ -10,7 +10,7 @@ This is an ansible role that will launch a kubernetes cluster over AWS cloud and
 7. Then, after successfully starting the instances and inventory updates. Run `main.yml` file with : `ansible-playbook main.yml`.
 8. They will call the roles and apply the changes accordingly.
 
-`This cluster will create two slave nodes and one master node for cluster. It contains the static inventory, you can practice the same with dynamic inventory too`
+`This cluster will create two slave nodes and one master node for cluster. It contains the static inventory, you can practice the same with dynamic inventory too`<br>
 9. There is a YAML file `cred.yml` that will create two deployments one for `Wordpress` and another deployment for `MySQL` and a NodePort service that will expose the wordpress deployment to the outer world.
 10. Make sure your security group allows all traffic to your EC2 instance, then only the pods running on them can be accessed.
 11. Try to open the url in your browser: `<public-ip-of-your-master-node-ec2-instance>:<nodePort>` which is `30400` in my `cred.yml` file.
