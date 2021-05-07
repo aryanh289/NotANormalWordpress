@@ -1,7 +1,7 @@
 # NotANormalWordpress
 This is an ansible role that will launch a kubernetes cluster over AWS cloud and then it will launch deployments to deploy a multi-tier web application wordpress and integrate with MySQL and expose it over the public network.
 
-1. Donwload all the files and keep it in a folder  `roles`.
+1. Download all the files and keep it in a folder  `roles`.
 2. Try to keep the `.pem` security key file in the same roles folder where you kept this repo files.
 3. In `vars.yml`, replace your access key and secret key of AMI with mine.
 4. change the values of variable instead of `image_id`.
